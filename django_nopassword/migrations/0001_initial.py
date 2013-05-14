@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+from django.conf import settings
 from south.db import db
 from south.v2 import SchemaMigration
 from django.db import models
@@ -11,18 +12,16 @@ class Migration(SchemaMigration):
         # Adding model 'LoginCode'
         db.create_table(u'django_nopassword_logincode', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='login_codes', to=orm['tests.CustomUser'])),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name='login_codes', to=orm[settings.AUTH_USER_MODEL])),
             ('code', self.gf('django.db.models.fields.CharField')(max_length=20)),
             ('timestamp', self.gf('django.db.models.fields.DateTimeField')()),
             ('next', self.gf('django.db.models.fields.TextField')(blank=True)),
         ))
         db.send_create_signal(u'django_nopassword', ['LoginCode'])
 
-
     def backwards(self, orm):
         # Deleting model 'LoginCode'
         db.delete_table(u'django_nopassword_logincode')
-
 
     models = {
         u'auth.group': {
@@ -51,7 +50,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'next': ('django.db.models.fields.TextField', [], {'blank': 'True'}),
             'timestamp': ('django.db.models.fields.DateTimeField', [], {}),
-            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'login_codes'", 'to': u"orm['tests.CustomUser']"})
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'login_codes'", 'to': u"orm['" + settings.AUTH_USER_MODEL + u"']"})
         },
         u'tests.customuser': {
             'Meta': {'object_name': 'CustomUser'},
