@@ -61,3 +61,17 @@ default: `example.com`
 
 ##### DEFAULT_FROM_EMAIL
 default: `root@example.com`
+
+## Running tests
+To run all tests
+
+   python setup.py test
+
+To run a specific test
+First you need to install tox
+
+   pip install tox
+
+Then run the test with
+
+   tox -- tests.<TestCase>[.test_method]
