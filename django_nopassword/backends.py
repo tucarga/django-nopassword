@@ -24,7 +24,7 @@ class EmailBackend:
                 login_code = LoginCode.objects.get(user=user, code=code, timestamp__gt=timestamp)
                 user = login_code.user
                 user.code = login_code
-                login_code.delete()
+                self.post_authenticate_action(login_code)
                 return user
         except (TypeError, User.DoesNotExist, LoginCode.DoesNotExist, FieldError):
             return None
@@ -34,3 +34,6 @@ class EmailBackend:
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
+
+    def post_authenticate_action(self, login_code):
+        login_code.delete()
