@@ -1,33 +1,23 @@
 #!/usr/bin/env python
+import os
 import sys
-from optparse import OptionParser
-from os.path import abspath, dirname
-from django.test.simple import DjangoTestSuiteRunner
-from django.test.utils import setup_test_environment
 
-from south.management.commands import patch_for_test_db_setup
+os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
 
-def runtests(*test_args, **kwargs):
-    # setup_test_environment()
+from django.test.utils import get_runner
+from django.conf import settings
+import django
 
-    # This is needed because tables doesn't get created by south
-    # http://blogs.terrorware.com/geoff/2012/03/05/making-sure-south-migrations-get-run-when-using-djangos-create_test_db/
-    patch_for_test_db_setup()
+if django.VERSION >= (1, 7):
+    django.setup()
 
-    parent = dirname(abspath(__file__))
-    sys.path.insert(0, parent)
-    test_runner = DjangoTestSuiteRunner(
-        verbosity=kwargs.get('verbosity', 1),
-        interactive=kwargs.get('interactive', False),
-        failfast=kwargs.get('failfast')
-    )
-    failures = test_runner.run_tests(test_args)
-    sys.exit(failures)
+
+def runtests():
+    TestRunner = get_runner(settings)
+    test_runner = TestRunner(verbosity=1, interactive=True)
+    failures = test_runner.run_tests(['tests'])
+    sys.exit(bool(failures))
+
 
 if __name__ == '__main__':
-    parser = OptionParser()
-    parser.add_option('--failfast', action='store_true', default=False, dest='failfast')
-
-    (options, args) = parser.parse_args()
-
-    runtests(failfast=options.failfast, *args)
+    runtests()
