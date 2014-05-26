@@ -129,7 +129,7 @@ class TestUsersJsonView(unittest.TestCase):
 class TestSafeDelete(unittest.TestCase):
 
     def test_is_enabled_in_LoginCode_model(self):
-        user = User.objects.create()
+        user = get_user_model().objects.create()
         login_code = LoginCode.objects.create(user=user)
 
         self.assertTrue(hasattr(login_code, 'deleted'))
