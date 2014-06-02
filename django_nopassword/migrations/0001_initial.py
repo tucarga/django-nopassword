@@ -10,7 +10,9 @@ from django.db import models
 # https://travis-ci.org/relekang/django-nopassword/builds/20701865
 # Blog post about this issue
 # http://kevindias.com/writing/django-custom-user-models-south-and-reusable-apps/
-from django_nopassword.utils import User
+from django_nopassword.utils import get_user_model
+
+User = get_user_model()
 
 user_orm_label = u'%s.%s' % (User._meta.app_label, User._meta.object_name)
 user_model_label = u'%s.%s' % (User._meta.app_label, User._meta.module_name)
